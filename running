@@ -1,0 +1,44 @@
+docker run -it --name mosquitto -p 1883:1883 eclipse-mosquitto
+
+docker run --name mosquitto -p 1883:1883 --rm -v `pwd`/mosquitto.conf:/mosquitto/config/mosquitto.conf eclipse-mosquitto
+
+sudo docker run -it --name mosquitto -p 1883:1883 -p 9001:9001 -v "$(pwd)"/mosquitto.conf:/mosquitto/config/mosquitto.conf eclipse-mosquitto
+
+sudo docker run -it --name mosquitto -p 1883:1883 -p 9001:9001 -v "$(pwd)"/mosquitto2.conf:/mosquitto/config/mosquitto.conf eclipse-mosquitto
+
+docker exec mosquitto mosquitto_passwd -b /mosquitto/config/password.txt admin password
+docker-compose exec mosquitto mosquitto_passwd -b /mosquitto/config/password.txt admin password
+docker-compose restart
+
+1) Subscribing to a topic:
+docker exec mosquitto mosquitto_sub -d -h localhost -p 1883 -t "1/monitor/water" -u admin -P password
+docker exec mosquitto mosquitto_sub -d -h localhost -p 1883 -t "1/monitor/water" -u user -P password
+
+docker exec iot-mosquitto mosquitto_sub -d -h localhost -p 1884 -t "1/monitor/water" -u admin -P password
+docker exec iot-mosquitto mosquitto_sub -d -h vash.tech -p 8883 -t "1/monitor/water" -u admin -P password
+docker exec mosquitto mosquitto_sub -d -h 103.150.93.100 -p 8883 -t "1/monitor/water" -u admin -P password
+docker exec mosquitto mosquitto_sub -d -h vash.tech -p 8883 -t "1/monitor/water" -u admin -P password
+
+docker-compose exec mosquitto mosquitto_sub -d -h localhost -p 1884 -t "1/monitor/water" -u admin -P password
+
+
+mosquitto_sub -d -h pipigendut.tech -p 1884 -t "1/monitor/water" -u admin -P password
+mosquitto_sub -d -h localhost -p 1884 -t "1/monitor/water" -u admin -P password
+mosquitto_sub -d -h localhost -p 8883 -t "1/monitor/water" -u admin -P password
+mosquitto_sub -d -h pipigendut.tech -p 8883 -t "1/monitor/water" -u admin -P password
+
+
+2) Other client publishes a message content to that topic:
+docker exec mosquitto mosquitto_pub -d -h localhost -p 1883 -t "1/monitor/water" -u admin -P password -m "Hello"
+docker exec mosquitto mosquitto_pub -d -h pipigendut.tech -p 1883 -t "1/monitor/water" -u admin -P password -m "Hello"
+
+docker exec iot-mosquitto mosquitto_pub -d -h localhost -p 1884 -t "1/monitor/water" -u admin -P password -m "Hello"
+docker exec iot-mosquitto mosquitto_pub -d -h 31.220.111.30 -p 1884 -t "1/monitor/water" -u admin -P password -m "Hello"
+docker exec iot-mosquitto mosquitto_pub -d -h pipigendut.tech -p 1884 -t "1/monitor/water" -u admin -P password -m "Hello"
+docker exec iot-mosquitto mosquitto_pub -d -h vash.tech -p 8883 -t "1/monitor/water" -u admin -P password -m "Hello"
+
+
+docker exec iot-mosquitto mosquitto_pub -d -h pipigendut.tech -p 8883 -t "1/monitor/water" -u admin -P password -m "Helo"
+
+mosquitto_pub -d -h localhost -p 1884 -t "1/monitor/water" -u admin -P password -m "Helo"
+mosquitto_pub -d -h pipigendut.tech -p 8883 -t "1/monitor/water" -u admin -P password -m "Helo"
